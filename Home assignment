@@ -1,0 +1,95 @@
+-- Student Name: [Your Name]
+
+-- Q1: List all the rectangles
+SELECT * FROM rectangles;
+
+-- Q2: How many rectangles are there?
+-- A: Use COUNT to count the rows in the rectangles table
+SELECT COUNT(*) AS total_rectangles FROM rectangles;
+
+-- Q3: What color is the widest rectangle?
+-- A: Use MAX on width and filter for that value
+SELECT color FROM rectangles 
+WHERE width = (SELECT MAX(width) FROM rectangles);
+
+-- Q4: What color is the tallest rectangle?
+-- A: Use MAX on height and filter for that value
+SELECT color FROM rectangles 
+WHERE height = (SELECT MAX(height) FROM rectangles);
+
+-- Q5: List all rectangles that are wider than they are tall
+-- A: Compare width and height
+SELECT * FROM rectangles 
+WHERE width > height;
+
+-- Q6: Calculate and select the area of each rectangle
+-- A: Multiply width by height and use AS to name the column
+SELECT id, width, height, width * height AS Area FROM rectangles;
+
+-- Q7: What color is the largest rectangle?
+-- A: Largest by area (width * height)
+SELECT color FROM rectangles 
+WHERE width * height = (SELECT MAX(width * height) FROM rectangles);
+
+-- Q8: What color is the rectangle that extends the most to the right?
+-- A: Use x + width for rightmost edge
+SELECT color FROM rectangles 
+WHERE x + width = (SELECT MAX(x + width) FROM rectangles);
+
+-- Q9: Find rectangle(s) with NULL color
+-- A: Check for NULL in the color column
+SELECT * FROM rectangles 
+WHERE color IS NULL;
+
+-- Q10: List all the different colors
+-- A: Use DISTINCT to remove duplicates
+SELECT DISTINCT color FROM rectangles;
+
+-- Q11: List all the different named colors
+-- A: Exclude NULL and colors starting with #
+SELECT DISTINCT color FROM rectangles 
+WHERE color IS NOT NULL AND color NOT LIKE '#%';
+
+-- Q12: List rectangle colors in upper case letters
+-- A: Use the UPPER function
+SELECT DISTINCT UPPER(color) AS uppercase_color FROM rectangles;
+
+-- Q13: What is the course_id of the course with the longest name?
+-- A: Use LENGTH to find the longest name
+SELECT course_id FROM courses 
+WHERE LENGTH(course_name) = (SELECT MAX(LENGTH(course_name)) FROM courses);
+
+-- Q14: How many assignments are there with due dates in 2024?
+-- A: Filter due_date for the year 2024
+SELECT COUNT(*) AS assignments_2024 FROM assignments 
+WHERE due_date LIKE '2024%';
+
+-- Q15: Concatenate Course ID and name
+-- A: Use the || operator to concatenate
+SELECT course_id || ': ' || course_name AS course_info FROM courses;
+
+-- Q16: List courses with Labs on Mondays
+-- A: Filter lab_time for 'Monday'
+SELECT course_id, course_name, lab_time FROM courses 
+WHERE lab_time LIKE '%Monday%';
+
+-- Q17: Past Assignments
+-- A: Filter due_date before the current date (use CURRENT_DATE)
+SELECT * FROM assignments 
+WHERE due_date < CURRENT_DATE;
+
+-- Q18: How many assignments are there for each course?
+-- A: Use GROUP BY and COUNT
+SELECT course_id, COUNT(*) AS assignment_count FROM assignments 
+GROUP BY course_id;
+
+-- Bonus 1: List the number of assignments per semester
+-- A: Use GROUP BY semester
+SELECT semester, COUNT(*) AS assignment_count FROM courses 
+JOIN assignments ON courses.course_id = assignments.course_id 
+GROUP BY semester;
+
+-- Bonus 2: Show the red component of all the RGB colors
+-- A: Use SUBSTR to extract the first two characters after #
+SELECT id, color, SUBSTR(color, 2, 2) AS red_component FROM rectangles 
+WHERE color LIKE '#%';
